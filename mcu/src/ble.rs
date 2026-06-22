@@ -1,90 +1,22 @@
+pub mod central;
+pub mod peripheral;
+
 use bt_hci::cmd::SyncCmd;
 use embassy_executor::Spawner;
 use embassy_nrf::{mode::Blocking, peripherals, rng, Peri};
-use embassy_sync::blocking_mutex::raw::CriticalSectionRawMutex;
-use embassy_sync::signal::Signal;
-use embassy_sync::watch::Watch;
 use nrf_sdc::mpsl::MultiprotocolServiceLayer;
 use nrf_sdc::vendor::ZephyrReadStaticAddrs;
 use nrf_sdc::{self as sdc, mpsl};
 use static_cell::StaticCell;
 use trouble_host::prelude::*;
 
-const CSC_SERVICE: Uuid = Uuid::new_short(0x1816);
-const CSC_MEASUREMENT: Uuid = Uuid::new_short(0x2A5B);
-const BATTERY_SERVICE: Uuid = Uuid::new_short(0x180F);
-const BATTERY_LEVEL: Uuid = Uuid::new_short(0x2A19);
+pub use central::{Error, BATTERY, CRANK_REVS};
 
-#[derive(Clone, Debug)]
-pub enum Error {
-    SpawnFailed,
-    MpslInitFailed,
-    SdcInitFailed,
-    RunnerCrashed,
-}
-
-impl core::fmt::Display for Error {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        match self {
-            Error::SpawnFailed => write!(f, "spawn failed"),
-            Error::MpslInitFailed => write!(f, "MPSL init failed"),
-            Error::SdcInitFailed => write!(f, "SDC init failed"),
-            Error::RunnerCrashed => write!(f, "BLE runner crashed"),
-        }
-    }
-}
-
-impl core::error::Error for Error {}
-
-// Cumulative crank revolutions — sent only when the value changes (bike moving).
-pub static CRANK_REVS: Watch<CriticalSectionRawMutex, Result<u16, Error>, 2> = Watch::new();
-
-// Battery percentage (0–100) — sent when the sensor reports a change.
-pub static BATTERY: Watch<CriticalSectionRawMutex, Result<u8, Error>, 1> = Watch::new();
-
-// Signals the address of the first CSC sensor spotted during scanning.
-static SENSOR_ADDR: Signal<CriticalSectionRawMutex, Address> = Signal::new();
-
-type MyController = nrf_sdc::SoftdeviceController<'static>;
+pub(crate) type MyController = nrf_sdc::SoftdeviceController<'static>;
 
 #[embassy_executor::task]
 async fn mpsl_task(mpsl: &'static MultiprotocolServiceLayer<'static>) -> ! {
     mpsl.run().await
-}
-
-fn ad_has_uuid16(data: &[u8], target: u16) -> bool {
-    let mut i = 0;
-    while i < data.len() {
-        let len = data[i] as usize;
-        if len == 0 || i + 1 + len > data.len() {
-            break;
-        }
-        let ad_type = data[i + 1];
-        if ad_type == 0x02 || ad_type == 0x03 {
-            let uuid_data = &data[i + 2..i + 1 + len];
-            let mut j = 0;
-            while j + 1 < uuid_data.len() {
-                if u16::from_le_bytes([uuid_data[j], uuid_data[j + 1]]) == target {
-                    return true;
-                }
-                j += 2;
-            }
-        }
-        i += 1 + len;
-    }
-    false
-}
-
-struct CscEventHandler;
-
-impl EventHandler for CscEventHandler {
-    fn on_ext_adv_reports(&self, reports: LeExtAdvReportsIter<'_>) {
-        for report in reports.filter_map(|r| r.ok()) {
-            if ad_has_uuid16(report.data, 0x1816) {
-                SENSOR_ADDR.signal(Address::new(report.addr_kind, report.addr));
-            }
-        }
-    }
 }
 
 #[embassy_executor::task]
@@ -97,7 +29,7 @@ async fn ble_task(controller: MyController) {
         }
     };
 
-    static RESOURCES: StaticCell<HostResources<MyController, DefaultPacketPool, 1, 1>> =
+    static RESOURCES: StaticCell<HostResources<MyController, DefaultPacketPool, 2, 1>> =
         StaticCell::new();
     let resources = RESOURCES.init(HostResources::new());
     let stack = trouble_host::new(controller, resources)
@@ -106,157 +38,13 @@ async fn ble_task(controller: MyController) {
 
     let mut runner = stack.runner();
     let (runner_result, _) = embassy_futures::join::join(
-        runner.run_with_handler(&CscEventHandler),
-        cadence_loop(&stack),
+        runner.run_with_handler(&central::CscEventHandler),
+        embassy_futures::join::join(central::run(&stack), peripheral::run(&stack)),
     )
     .await;
     if let Err(e) = runner_result {
         log::warn!("[BLE] runner error: {:?}", e);
         CRANK_REVS.sender().send(Err(Error::RunnerCrashed));
-    }
-}
-
-async fn cadence_loop(stack: &Stack<'_, MyController, DefaultPacketPool>) {
-    loop {
-        SENSOR_ADDR.reset();
-
-        log::info!("[BLE] Scanning for CSC sensor...");
-        let central = stack.central();
-        let mut scanner = Scanner::new(central);
-        let scan_config = ScanConfig {
-            filter_accept_list: &[],
-            ..Default::default()
-        };
-
-        let session = match scanner.scan_ext(&scan_config).await {
-            Ok(s) => s,
-            Err(e) => {
-                log::warn!("[BLE] scan error: {:?}", e);
-                continue;
-            }
-        };
-
-        let addr = SENSOR_ADDR.wait().await;
-        drop(session);
-        embassy_futures::yield_now().await;
-
-        log::info!("[BLE] Found CSC sensor, connecting...");
-        let mut central = scanner.into_inner();
-        let connect_config = ConnectConfig {
-            connect_params: Default::default(),
-            scan_config: ScanConfig {
-                filter_accept_list: &[addr],
-                ..Default::default()
-            },
-        };
-
-        let conn = match central.connect_ext(&connect_config).await {
-            Ok(c) => c,
-            Err(e) => {
-                log::warn!("[BLE] connect error: {:?}", e);
-                continue;
-            }
-        };
-        log::info!("[BLE] Connected");
-
-        let client: GattClient<'_, MyController, DefaultPacketPool, 4> =
-            match GattClient::new(stack, &conn).await {
-                Ok(c) => c,
-                Err(e) => {
-                    log::warn!("[BLE] GattClient error: {:?}", e);
-                    continue;
-                }
-            };
-
-        let (task_result, _) = embassy_futures::join::join(client.task(), async {
-            let services = match client.services_by_uuid(&CSC_SERVICE).await {
-                Ok(s) => s,
-                Err(e) => {
-                    log::warn!("[BLE] service discovery error: {:?}", e);
-                    return;
-                }
-            };
-            let service = match services.first() {
-                Some(s) => s.clone(),
-                None => {
-                    log::info!("[BLE] No CSC service found on this device");
-                    return;
-                }
-            };
-            let characteristic: Characteristic<[u8]> = match client
-                .characteristic_by_uuid(&service, &CSC_MEASUREMENT)
-                .await
-            {
-                Ok(c) => c,
-                Err(e) => {
-                    log::warn!("[BLE] characteristic error: {:?}", e);
-                    return;
-                }
-            };
-            let mut csc_listener = match client.subscribe(&characteristic, false).await {
-                Ok(l) => l,
-                Err(e) => {
-                    log::warn!("[BLE] subscribe error: {:?}", e);
-                    return;
-                }
-            };
-
-            let mut battery_listener = 'bat: {
-                let Ok(svcs) = client.services_by_uuid(&BATTERY_SERVICE).await else {
-                    break 'bat None;
-                };
-                let Some(svc) = svcs.first().cloned() else {
-                    break 'bat None;
-                };
-                let Ok(bat_char): Result<Characteristic<[u8]>, _> =
-                    client.characteristic_by_uuid(&svc, &BATTERY_LEVEL).await
-                else {
-                    break 'bat None;
-                };
-                client.subscribe(&bat_char, false).await.ok()
-            };
-
-            log::info!("[BLE] Subscribed to CSC measurement");
-            embassy_futures::join::join(
-                async {
-                    let crank_tx = CRANK_REVS.sender();
-                    let mut last_revs: Option<u16> = None;
-                    loop {
-                        let notif = csc_listener.next().await;
-                        let data = notif.as_ref();
-                        if data.len() >= 5 && (data[0] & 0x02) != 0 {
-                            let revs = u16::from_le_bytes([data[1], data[2]]);
-                            if Some(revs) != last_revs {
-                                crank_tx.send(Ok(revs));
-                                last_revs = Some(revs);
-                            }
-                            log::debug!("[BLE] CSC revs={}", revs);
-                        }
-                    }
-                },
-                async {
-                    let battery_tx = BATTERY.sender();
-                    match battery_listener {
-                        Some(ref mut listener) => loop {
-                            let notif = listener.next().await;
-                            let data = notif.as_ref();
-                            if let Some(&level) = data.first() {
-                                log::info!("[BLE] Battery: {}%", level);
-                                battery_tx.send(Ok(level));
-                            }
-                        },
-                        None => core::future::pending().await,
-                    }
-                },
-            )
-            .await;
-        })
-        .await;
-
-        if let Err(e) = task_result {
-            log::warn!("[BLE] GATT task error: {:?}", e);
-        }
-        log::info!("[BLE] Disconnected, restarting scan");
     }
 }
 
@@ -306,12 +94,17 @@ pub fn init(
     static RNG_CELL: StaticCell<rng::Rng<'static, Blocking>> = StaticCell::new();
     let rng_ref = RNG_CELL.init(rng::Rng::new_blocking(rng_periph));
 
-    static SDC_MEM: StaticCell<sdc::Mem<4096>> = StaticCell::new();
+    static SDC_MEM: StaticCell<sdc::Mem<8192>> = StaticCell::new();
     let sdc = sdc::Builder::new()
         .map_err(|_| Error::SdcInitFailed)?
         .support_ext_scan()
         .support_central()
         .central_count(1)
+        .map_err(|_| Error::SdcInitFailed)?
+        .support_adv()
+        .support_ext_adv()
+        .support_peripheral()
+        .peripheral_count(1)
         .map_err(|_| Error::SdcInitFailed)?
         .build(sdc_p, rng_ref, mpsl, SDC_MEM.init(sdc::Mem::new()))
         .map_err(|_| Error::SdcInitFailed)?;

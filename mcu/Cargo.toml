@@ -29,7 +29,7 @@ chrono = { version = "0.4", default-features = false }
 # ble — nrf-sdc 0.4 is git-only (crates.io has only 0.3)
 nrf-sdc = { git = "https://github.com/alexmoon/nrf-sdc", rev = "8efd935", features = ["nrf52840", "multirole"] }
 nrf-mpsl = { git = "https://github.com/alexmoon/nrf-sdc", rev = "8efd935", features = ["critical-section-impl"] }
-trouble-host = { version = "0.7", features = ["scan", "gatt"] }
+trouble-host = { version = "0.7", features = ["scan", "gatt", "peripheral", "derive"] }
 bt-hci = { version = "0.9", default-features = false }
 
 [profile.release]
