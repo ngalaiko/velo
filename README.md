@@ -1,4 +1,4 @@
-# bike-computer
+# voop
 
 idea is to have a thing that auto-detects my bike rides into apple health
 

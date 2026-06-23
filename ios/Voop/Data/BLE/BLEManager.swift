@@ -31,7 +31,7 @@ final class BLEManager: NSObject {
         central = CBCentralManager(
             delegate: self,
             queue: .main,
-            options: [CBCentralManagerOptionRestoreIdentifierKey: "com.galaiko.BikeComputer.central"]
+            options: [CBCentralManagerOptionRestoreIdentifierKey: "com.galaiko.voop.central"]
         )
     }
 

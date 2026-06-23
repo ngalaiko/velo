@@ -1,4 +1,4 @@
-name: BikeComputer
+name: Voop
 options:
   bundleIdPrefix: com.galaiko
   deploymentTarget:
@@ -13,20 +13,20 @@ settings:
     SWIFT_STRICT_CONCURRENCY: complete
 
 targets:
-  BikeComputer:
+  Voop:
     type: application
     platform: iOS
     deploymentTarget: "26.0"
     sources:
-      - path: BikeComputer
+      - path: Voop
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.galaiko.BikeComputer
+        PRODUCT_BUNDLE_IDENTIFIER: com.galaiko.voop
         DEVELOPMENT_TEAM: ""
-        INFOPLIST_FILE: BikeComputer/App/Info.plist
+        INFOPLIST_FILE: Voop/App/Info.plist
         CODE_SIGN_STYLE: Automatic
     entitlements:
-      path: BikeComputer/App/BikeComputer.entitlements
+      path: Voop/App/Voop.entitlements
       properties:
         com.apple.developer.healthkit: true
         com.apple.developer.healthkit.access:

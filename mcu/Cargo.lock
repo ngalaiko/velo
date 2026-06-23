@@ -51,33 +51,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "bike-computer"
-version = "0.1.0"
-dependencies = [
- "bt-hci",
- "chrono",
- "cortex-m",
- "cortex-m-rt",
- "display-interface",
- "embassy-executor",
- "embassy-futures",
- "embassy-nrf",
- "embassy-sync",
- "embassy-time",
- "embassy-usb",
- "embedded-graphics",
- "heapless 0.8.0",
- "log",
- "nmea",
- "nrf-mpsl",
- "nrf-sdc",
- "panic-halt",
- "ssd1306",
- "static_cell",
- "trouble-host",
-]
-
-[[package]]
 name = "bindgen"
 version = "0.72.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1666,6 +1639,33 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "de437e2a6208b014ab52972a27e59b33fa2920d3e00fe05026167a1c509d19cc"
 dependencies = [
  "vcell",
+]
+
+[[package]]
+name = "voop"
+version = "0.1.0"
+dependencies = [
+ "bt-hci",
+ "chrono",
+ "cortex-m",
+ "cortex-m-rt",
+ "display-interface",
+ "embassy-executor",
+ "embassy-futures",
+ "embassy-nrf",
+ "embassy-sync",
+ "embassy-time",
+ "embassy-usb",
+ "embedded-graphics",
+ "heapless 0.8.0",
+ "log",
+ "nmea",
+ "nrf-mpsl",
+ "nrf-sdc",
+ "panic-halt",
+ "ssd1306",
+ "static_cell",
+ "trouble-host",
 ]
 
 [[package]]

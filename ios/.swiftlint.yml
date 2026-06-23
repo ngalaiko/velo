@@ -1,5 +1,5 @@
 included:
-  - BikeComputer
+  - Voop
 
 disabled_rules:
   - trailing_whitespace

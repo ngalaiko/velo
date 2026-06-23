@@ -52,7 +52,7 @@ pub fn init(usbd: Peri<'static, peripherals::USBD>) -> (UsbRunner, Usb) {
 
     let mut config = embassy_usb::Config::new(0xc0de, 0xcafe);
     config.manufacturer = Some("Nikita");
-    config.product = Some("Bike Computer");
+    config.product = Some("Voop");
     config.serial_number = Some("1");
     config.max_power = 100;
 

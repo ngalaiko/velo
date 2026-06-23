@@ -23,12 +23,12 @@
 		<string>bluetooth-central</string>
 	</array>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>BikeComputer connects to your bike computer device to record ride data.</string>
+	<string>Voop connects to your bike computer device to record ride data.</string>
 	<key>NSHealthShareUsageDescription</key>
-	<string>BikeComputer reads your health data to avoid duplicating workouts.</string>
+	<string>Voop reads your health data to avoid duplicating workouts.</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>BikeComputer saves your rides as workouts with GPS routes and cadence data.</string>
+	<string>Voop saves your rides as workouts with GPS routes and cadence data.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>BikeComputer uses location to display your ride on a map.</string>
+	<string>Voop uses location to display your ride on a map.</string>
 </dict>
 </plist>

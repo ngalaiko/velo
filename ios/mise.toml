@@ -7,8 +7,8 @@ swiftformat = "0.61.1"
 description = "Build the app for iPhone 17 simulator"
 run = """
 xcodebuild \
-  -project BikeComputer.xcodeproj \
-  -scheme BikeComputer \
+  -project Voop.xcodeproj \
+  -scheme Voop \
   -destination 'platform=iOS Simulator,name=iPhone 17' \
   -derivedDataPath .build \
   build \
@@ -22,15 +22,15 @@ run = """
 xcrun simctl boot "iPhone 17" 2>/dev/null || true
 open -a Simulator
 xcrun simctl bootstatus "iPhone 17" -b
-xcrun simctl install "iPhone 17" .build/Build/Products/Debug-iphonesimulator/BikeComputer.app
-xcrun simctl launch --console "iPhone 17" com.galaiko.BikeComputer
+xcrun simctl install "iPhone 17" .build/Build/Products/Debug-iphonesimulator/Voop.app
+xcrun simctl launch --console "iPhone 17" com.galaiko.voop
 """
 
 [tasks.lint]
 description = "Lint Swift sources with SwiftLint"
-run = "swiftlint lint --strict BikeComputer"
+run = "swiftlint lint --strict Voop"
 
 [tasks.format]
 description = "Format Swift sources with SwiftFormat"
-run = "swiftformat BikeComputer"
+run = "swiftformat Voop"
 

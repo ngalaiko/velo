@@ -22,14 +22,14 @@ const ADV_DATA: &[u8] = &[
     0x02, 0x01, 0x06, // Flags: LE General Discoverable, BR/EDR Not Supported
     0x11, 0x07, // length=17, type=Complete 128-bit UUIDs
     0x05, 0x3A, 0x96, 0x4D, 0xE4, 0x1E, 0x60, 0x8C, 0x4B, 0x59, 0xE4, 0xED, 0x01, 0x00, 0xCE,
-    0xBE, 0x0D, 0x09, b'B', b'i', b'k', b'e', b'C', b'o', b'm', b'p', b'u', b't', b'e', b'r',
+    0xBE, 0x05, 0x09, b'V', b'o', b'o', b'p',
 ];
 
 pub async fn run(stack: &Stack<'_, super::MyController, DefaultPacketPool>) {
     static SERVER: StaticCell<BikeServer<'static>> = StaticCell::new();
     let server = SERVER.init(
         BikeServer::new_with_config(GapConfig::Peripheral(PeripheralConfig {
-            name: "BikeComputer",
+            name: "Voop",
             appearance: &appearance::cycling::SPEED_AND_CADENCE_SENSOR,
         }))
         .expect("BikeServer init failed"),

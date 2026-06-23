@@ -1,0 +1,472 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		02F0CC87A01AB8C04CC6077F /* PairingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D563FEDDA3C68DA140BF1421 /* PairingView.swift */; };
+		1C9B649A1A8864C5ABD3FE47 /* HealthKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CB05AFFA9C5717810E1C5B3 /* HealthKitService.swift */; };
+		24240449DE15B08DB4014DC5 /* Ride.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BFE515DA543FD8955F31EE7 /* Ride.swift */; };
+		280F27C8B58CE779B970629A /* DeviceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4562ED23BD9A6DD6F7C9A43E /* DeviceRepository.swift */; };
+		2B588EC5270E08534F8566B0 /* GpsAnchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DFB04D7A869304BA2D906B /* GpsAnchor.swift */; };
+		2B773EFDE1CD771860A0A90A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E50F4C870EFEFAF5391D026 /* ContentView.swift */; };
+		510A5B1169FFE4FECE6A5A62 /* RideDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2061BD96C2B27FDB340E1FAF /* RideDetailView.swift */; };
+		5734E48308D55ECEC81824AB /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B95F2B14E8398297E4B3361 /* AppModel.swift */; };
+		59AA7C6458C1C44DF07C2FF1 /* BLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9902762718B312424DF218CD /* BLEManager.swift */; };
+		667D6CD52721E98594176401 /* DetectRides.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B9CC477C9EF0855712CF5F /* DetectRides.swift */; };
+		6E63E6E480C82A9919D13F3A /* VoopApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2323F51F0C727CAB37EEDA1B /* VoopApp.swift */; };
+		84964D36EACCC4F4F0BEA90F /* CalculateMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379D9CDF976DA71F4375E6B0 /* CalculateMetrics.swift */; };
+		9227A63B1EFA2ADB28A710FC /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150088A36A7106812C99EB88 /* StatusView.swift */; };
+		D1E0A1862F5CBFBCEA68DE9D /* MCUPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C6132BE16B2FC6F0F3FC3E /* MCUPeripheral.swift */; };
+		DC156F0B6E267C182959983B /* RideRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48AFBBB8BAA281BF20ABA11 /* RideRepository.swift */; };
+		E1D76C5DDA726D6E976315A4 /* RideListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A330F6CD2EF8B41572661F /* RideListView.swift */; };
+		EC314461DAB293E028D3EE3C /* RideStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB81DA3F88E0DFDAE998A2F2 /* RideStore.swift */; };
+		FC38209773F4289F552D768B /* DataPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4775352C25E5E4B2F5691E2 /* DataPoint.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0B95F2B14E8398297E4B3361 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		125F26F0973B842A1480B272 /* Voop.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Voop.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		150088A36A7106812C99EB88 /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
+		2061BD96C2B27FDB340E1FAF /* RideDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RideDetailView.swift; sourceTree = "<group>"; };
+		2323F51F0C727CAB37EEDA1B /* VoopApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoopApp.swift; sourceTree = "<group>"; };
+		2BFE515DA543FD8955F31EE7 /* Ride.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ride.swift; sourceTree = "<group>"; };
+		34C6132BE16B2FC6F0F3FC3E /* MCUPeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCUPeripheral.swift; sourceTree = "<group>"; };
+		379D9CDF976DA71F4375E6B0 /* CalculateMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculateMetrics.swift; sourceTree = "<group>"; };
+		4562ED23BD9A6DD6F7C9A43E /* DeviceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceRepository.swift; sourceTree = "<group>"; };
+		6E50F4C870EFEFAF5391D026 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		8CB05AFFA9C5717810E1C5B3 /* HealthKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitService.swift; sourceTree = "<group>"; };
+		9902762718B312424DF218CD /* BLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEManager.swift; sourceTree = "<group>"; };
+		B8B9CC477C9EF0855712CF5F /* DetectRides.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetectRides.swift; sourceTree = "<group>"; };
+		BB81DA3F88E0DFDAE998A2F2 /* RideStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RideStore.swift; sourceTree = "<group>"; };
+		BDB4DA0921D0FA995CF137E1 /* Voop.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Voop.entitlements; sourceTree = "<group>"; };
+		C48AFBBB8BAA281BF20ABA11 /* RideRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RideRepository.swift; sourceTree = "<group>"; };
+		CB79EB307182355072E44A19 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		D563FEDDA3C68DA140BF1421 /* PairingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingView.swift; sourceTree = "<group>"; };
+		E7A330F6CD2EF8B41572661F /* RideListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RideListView.swift; sourceTree = "<group>"; };
+		F3DFB04D7A869304BA2D906B /* GpsAnchor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GpsAnchor.swift; sourceTree = "<group>"; };
+		F4775352C25E5E4B2F5691E2 /* DataPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPoint.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		1D2E8FDF1A5624533ED4665A = {
+			isa = PBXGroup;
+			children = (
+				EBA973C8A458E9A4A1F4316B /* Voop */,
+				D4FDE2A5F7AFDF60C0AAC327 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		408D2C07706A8894D1EDEDD2 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				0B95F2B14E8398297E4B3361 /* AppModel.swift */,
+				6CDF76AA6FE4740E8F40E3CD /* Pairing */,
+				CCE22CF6F9F339C920737614 /* Rides */,
+				796B12DE122836D812386DAB /* Status */,
+			);
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		45CCDD19EAE21E55F296C4CF /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				EADBC4C43D32B51A30CA2762 /* BLE */,
+				9F550D03D324494E8A000D4B /* Health */,
+				C86B88CA3E3A3F6F8DA33BFE /* Persistence */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		4A6A85108F87002D7279807B /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F4775352C25E5E4B2F5691E2 /* DataPoint.swift */,
+				F3DFB04D7A869304BA2D906B /* GpsAnchor.swift */,
+				2BFE515DA543FD8955F31EE7 /* Ride.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		6CDF76AA6FE4740E8F40E3CD /* Pairing */ = {
+			isa = PBXGroup;
+			children = (
+				D563FEDDA3C68DA140BF1421 /* PairingView.swift */,
+			);
+			path = Pairing;
+			sourceTree = "<group>";
+		};
+		6D03047D88688BA9C80F5D50 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				4562ED23BD9A6DD6F7C9A43E /* DeviceRepository.swift */,
+				C48AFBBB8BAA281BF20ABA11 /* RideRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		796B12DE122836D812386DAB /* Status */ = {
+			isa = PBXGroup;
+			children = (
+				150088A36A7106812C99EB88 /* StatusView.swift */,
+			);
+			path = Status;
+			sourceTree = "<group>";
+		};
+		9F550D03D324494E8A000D4B /* Health */ = {
+			isa = PBXGroup;
+			children = (
+				8CB05AFFA9C5717810E1C5B3 /* HealthKitService.swift */,
+			);
+			path = Health;
+			sourceTree = "<group>";
+		};
+		A4F4D6F9C397950542186591 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				4A6A85108F87002D7279807B /* Models */,
+				6D03047D88688BA9C80F5D50 /* Repositories */,
+				F0A9E51F34E38F3D00356691 /* UseCases */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		C86B88CA3E3A3F6F8DA33BFE /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				BB81DA3F88E0DFDAE998A2F2 /* RideStore.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		C9D3071DAA64CF4E76808552 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				6E50F4C870EFEFAF5391D026 /* ContentView.swift */,
+				CB79EB307182355072E44A19 /* Info.plist */,
+				BDB4DA0921D0FA995CF137E1 /* Voop.entitlements */,
+				2323F51F0C727CAB37EEDA1B /* VoopApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		CCE22CF6F9F339C920737614 /* Rides */ = {
+			isa = PBXGroup;
+			children = (
+				2061BD96C2B27FDB340E1FAF /* RideDetailView.swift */,
+				E7A330F6CD2EF8B41572661F /* RideListView.swift */,
+			);
+			path = Rides;
+			sourceTree = "<group>";
+		};
+		D4FDE2A5F7AFDF60C0AAC327 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				125F26F0973B842A1480B272 /* Voop.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EADBC4C43D32B51A30CA2762 /* BLE */ = {
+			isa = PBXGroup;
+			children = (
+				9902762718B312424DF218CD /* BLEManager.swift */,
+				34C6132BE16B2FC6F0F3FC3E /* MCUPeripheral.swift */,
+			);
+			path = BLE;
+			sourceTree = "<group>";
+		};
+		EBA973C8A458E9A4A1F4316B /* Voop */ = {
+			isa = PBXGroup;
+			children = (
+				C9D3071DAA64CF4E76808552 /* App */,
+				45CCDD19EAE21E55F296C4CF /* Data */,
+				A4F4D6F9C397950542186591 /* Domain */,
+				408D2C07706A8894D1EDEDD2 /* Presentation */,
+			);
+			path = Voop;
+			sourceTree = "<group>";
+		};
+		F0A9E51F34E38F3D00356691 /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				379D9CDF976DA71F4375E6B0 /* CalculateMetrics.swift */,
+				B8B9CC477C9EF0855712CF5F /* DetectRides.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		61981F410A296D0A15576BC4 /* Voop */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 249069781B119E2AA511B98E /* Build configuration list for PBXNativeTarget "Voop" */;
+			buildPhases = (
+				B7A299254345AA20C63C71D4 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Voop;
+			packageProductDependencies = (
+			);
+			productName = Voop;
+			productReference = 125F26F0973B842A1480B272 /* Voop.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C7485D87195BE535D587E4BC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					61981F410A296D0A15576BC4 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 531FC68CE7881BEDE9E537FD /* Build configuration list for PBXProject "Voop" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 1D2E8FDF1A5624533ED4665A;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = D4FDE2A5F7AFDF60C0AAC327 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				61981F410A296D0A15576BC4 /* Voop */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B7A299254345AA20C63C71D4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5734E48308D55ECEC81824AB /* AppModel.swift in Sources */,
+				59AA7C6458C1C44DF07C2FF1 /* BLEManager.swift in Sources */,
+				84964D36EACCC4F4F0BEA90F /* CalculateMetrics.swift in Sources */,
+				2B773EFDE1CD771860A0A90A /* ContentView.swift in Sources */,
+				FC38209773F4289F552D768B /* DataPoint.swift in Sources */,
+				667D6CD52721E98594176401 /* DetectRides.swift in Sources */,
+				280F27C8B58CE779B970629A /* DeviceRepository.swift in Sources */,
+				2B588EC5270E08534F8566B0 /* GpsAnchor.swift in Sources */,
+				1C9B649A1A8864C5ABD3FE47 /* HealthKitService.swift in Sources */,
+				D1E0A1862F5CBFBCEA68DE9D /* MCUPeripheral.swift in Sources */,
+				02F0CC87A01AB8C04CC6077F /* PairingView.swift in Sources */,
+				24240449DE15B08DB4014DC5 /* Ride.swift in Sources */,
+				510A5B1169FFE4FECE6A5A62 /* RideDetailView.swift in Sources */,
+				E1D76C5DDA726D6E976315A4 /* RideListView.swift in Sources */,
+				DC156F0B6E267C182959983B /* RideRepository.swift in Sources */,
+				EC314461DAB293E028D3EE3C /* RideStore.swift in Sources */,
+				9227A63B1EFA2ADB28A710FC /* StatusView.swift in Sources */,
+				6E63E6E480C82A9919D13F3A /* VoopApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		15774C275F7EA8C32AF42CED /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Voop/App/Voop.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = Voop/App/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.galaiko.voop;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5AE53E3DB54592020840A6F6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_CONCURRENCY = complete;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		7B8C6EE393B4E1F597019A35 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Voop/App/Voop.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = Voop/App/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.galaiko.voop;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		8459BC765620635D99B800EC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_CONCURRENCY = complete;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		249069781B119E2AA511B98E /* Build configuration list for PBXNativeTarget "Voop" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				15774C275F7EA8C32AF42CED /* Debug */,
+				7B8C6EE393B4E1F597019A35 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		531FC68CE7881BEDE9E537FD /* Build configuration list for PBXProject "Voop" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5AE53E3DB54592020840A6F6 /* Debug */,
+				8459BC765620635D99B800EC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C7485D87195BE535D587E4BC /* Project object */;
+}

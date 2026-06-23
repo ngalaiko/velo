@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct BikeComputerApp: App {
+struct VoopApp: App {
     @State private var appModel = AppModel()
 
     var body: some Scene {
