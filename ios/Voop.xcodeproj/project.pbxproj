@@ -27,6 +27,7 @@
 		A22A26FA945FEBD9E1669896 /* VoopWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A7B2BE52FEA9F3E8AA677B32 /* VoopWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A52233CA93AC98332F43FBFD /* RawPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A269EAFA2F1F61A90F72B6 /* RawPoint.swift */; };
 		AA27EC83D52A6F2E65C6ABBB /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A24DDDC06EF51D40A1C8CB2 /* SwiftUI.framework */; };
+		AFBEFA884949AA8FA8A1C5E4 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 72114A04761E83F7E1A8DD5C /* AppIcon.icon */; };
 		AFDFA9C5984D293F70EDBCDD /* RideLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3602E80E9C53F626AA8573 /* RideLiveActivity.swift */; };
 		B0D3B9947B45DAE91E59B2DA /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDCADF750CDB0C0C3CDE07BC /* WidgetKit.framework */; };
 		B42B847B9BAE590E038C3386 /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F00F253C93A93A378053082 /* Formatters.swift */; };
@@ -87,6 +88,7 @@
 		4745F1500E5A41D671BE7824 /* VoopTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = VoopTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5368C6D6371FD4DE59571CAD /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
 		6E50F4C870EFEFAF5391D026 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		72114A04761E83F7E1A8DD5C /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		7B63B75A17284FF9B2A047C2 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		7BC4FC3832AAE2EFFA6B7782 /* DetectRidesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetectRidesTests.swift; sourceTree = "<group>"; };
 		81860989184021A98870F32E /* RideActivityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RideActivityController.swift; sourceTree = "<group>"; };
@@ -260,6 +262,7 @@
 		C9D3071DAA64CF4E76808552 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				72114A04761E83F7E1A8DD5C /* AppIcon.icon */,
 				6E50F4C870EFEFAF5391D026 /* ContentView.swift */,
 				CB79EB307182355072E44A19 /* Info.plist */,
 				BDB4DA0921D0FA995CF137E1 /* Voop.entitlements */,
@@ -335,6 +338,7 @@
 			buildConfigurationList = 249069781B119E2AA511B98E /* Build configuration list for PBXNativeTarget "Voop" */;
 			buildPhases = (
 				B7A299254345AA20C63C71D4 /* Sources */,
+				508FE729BF84670A48F85CA2 /* Resources */,
 				1F33D180790FAF47BB944455 /* Frameworks */,
 				64375C08951F752D4A918944 /* Embed Foundation Extensions */,
 			);
@@ -428,6 +432,17 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		508FE729BF84670A48F85CA2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AFBEFA884949AA8FA8A1C5E4 /* AppIcon.icon in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		840131E801DFF392CCDD67DE /* Sources */ = {
