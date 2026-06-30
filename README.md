@@ -35,7 +35,7 @@ ios/           Swift/SwiftUI iOS app
 
 ## Hardware
 
-- [Seeed Studio XIAO ESP32C3](https://wiki.seeedstudio.com/XIAO_ESP32C3_Getting_Started/)
+- [Seeed Studio XIAO nRF52840 Sense Plus](https://wiki.seeedstudio.com/XIAO_BLE/)
 - [Seeed Studio XIAO Expansion Board](https://wiki.seeedstudio.com/Seeeduino-XIAO-Expansion-Board/)
 - [Grove - GPS (Air530)](https://wiki.seeedstudio.com/Grove-GPS-Air530/)
 - [Garmin Cadence Sensor 2](https://www.garmin.com/en-US/p/641212/)
