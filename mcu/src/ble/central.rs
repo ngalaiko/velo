@@ -3,7 +3,7 @@ use embassy_sync::blocking_mutex::raw::CriticalSectionRawMutex;
 use embassy_sync::signal::Signal;
 use embassy_sync::watch::Watch;
 
-use embassy_time::Duration;
+use embassy_time::{Duration, Timer};
 use trouble_host::prelude::*;
 
 use super::MyController;
@@ -94,7 +94,16 @@ impl EventHandler for CscEventHandler {
 }
 
 pub async fn run(stack: &Stack<'_, MyController, DefaultPacketPool>) {
+    // Back off before every reconnect attempt (after the first) so a sensor that connects but
+    // fails service discovery — or any error path that `continue`s — doesn't spin in a tight
+    // scan→connect→fail loop. The first iteration scans immediately.
+    let mut backoff = false;
     loop {
+        if backoff {
+            Timer::after(Duration::from_secs(1)).await;
+        }
+        backoff = true;
+
         SENSOR_CONNECTED.sender().send(false);
         SENSOR_ADDR.reset();
 
