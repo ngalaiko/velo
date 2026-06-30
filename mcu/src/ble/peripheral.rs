@@ -17,9 +17,9 @@ pub struct BikeServer {
 
 #[gatt_service(uuid = "bece0001-ede4-4b59-8c60-1ee44d963a05")]
 struct BikeService {
-    /// Packed DataPoint wire format, 24 bytes fixed. See voop_protocol::DataPoint::pack().
-    #[characteristic(uuid = "bece0002-ede4-4b59-8c60-1ee44d963a05", notify, value = [0u8; 24])]
-    stream: [u8; 24],
+    /// Packed DataPoint wire format, 25 bytes fixed (incl. version byte). See DataPoint::pack().
+    #[characteristic(uuid = "bece0002-ede4-4b59-8c60-1ee44d963a05", notify, value = [0u8; 25])]
+    stream: [u8; 25],
     /// Current device status snapshot. See voop_protocol::DeviceStatus::pack().
     #[characteristic(uuid = "bece0003-ede4-4b59-8c60-1ee44d963a05", read, notify, value = [100u8, 0u8, 0u8, 0xFFu8])]
     status: [u8; 4],

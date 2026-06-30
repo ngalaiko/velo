@@ -11,6 +11,12 @@ pub const STATUS_CHAR_UUID: &str = "bece0003-ede4-4b59-8c60-1ee44d963a05";
 /// Write: iOS sends current unix time to the MCU.
 pub const TIME_SYNC_CHAR_UUID: &str = "bece0004-ede4-4b59-8c60-1ee44d963a05";
 
+/// Wire-format version, byte 0 of every packed `DataPoint`. Bump on any incompatible change to
+/// the packed layout; `DataPoint::unpack` rejects a buffer whose version byte doesn't match, so
+/// a firmware and an app built from different protocol revisions fail closed (no data) instead
+/// of silently misinterpreting bytes.
+pub const PROTOCOL_VERSION: u8 = 1;
+
 #[derive(Clone, Copy, Debug, PartialEq)]
 #[repr(u8)]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Enum))]
@@ -72,9 +78,10 @@ impl DeviceStatus {
 /// A single telemetry sample streamed over STREAM_CHAR_UUID — a raw event, no on-device
 /// interpretation. The consumer (iOS) reconstructs the absolute timeline from these.
 ///
-/// Wire format (little-endian, fixed 24 bytes):
-///   [uptime_ms u32][unix_millis u64][lat i32][lon i32][crank_revs u16][crank_event_time u16]
-/// Sentinels for the optionals: unix_millis == 0 ⇒ None; lat/lon == i32::MIN ⇒ None.
+/// Wire format (little-endian, fixed 25 bytes):
+///   [version u8][uptime_ms u32][unix_millis u64][lat i32][lon i32][crank_revs u16][crank_event_time u16]
+/// Byte 0 is PROTOCOL_VERSION (unpack rejects a mismatch). Sentinels for the optionals:
+/// unix_millis == 0 ⇒ None; lat/lon == i32::MIN ⇒ None.
 #[derive(Clone, Copy, Debug)]
 #[cfg_attr(feature = "uniffi", derive(uniffi::Record))]
 pub struct DataPoint {
@@ -98,29 +105,33 @@ pub struct DataPoint {
 const COORD_NONE: i32 = i32::MIN;
 
 impl DataPoint {
-    pub fn pack(&self) -> [u8; 24] {
-        let mut b = [0u8; 24];
-        b[0..4].copy_from_slice(&self.uptime_ms.to_le_bytes());
-        b[4..12].copy_from_slice(&self.unix_millis.unwrap_or(0).to_le_bytes());
-        b[12..16].copy_from_slice(&self.lat_microdeg.unwrap_or(COORD_NONE).to_le_bytes());
-        b[16..20].copy_from_slice(&self.lon_microdeg.unwrap_or(COORD_NONE).to_le_bytes());
-        b[20..22].copy_from_slice(&self.crank_revs.to_le_bytes());
-        b[22..24].copy_from_slice(&self.crank_event_time.to_le_bytes());
+    pub fn pack(&self) -> [u8; 25] {
+        let mut b = [0u8; 25];
+        b[0] = PROTOCOL_VERSION;
+        b[1..5].copy_from_slice(&self.uptime_ms.to_le_bytes());
+        b[5..13].copy_from_slice(&self.unix_millis.unwrap_or(0).to_le_bytes());
+        b[13..17].copy_from_slice(&self.lat_microdeg.unwrap_or(COORD_NONE).to_le_bytes());
+        b[17..21].copy_from_slice(&self.lon_microdeg.unwrap_or(COORD_NONE).to_le_bytes());
+        b[21..23].copy_from_slice(&self.crank_revs.to_le_bytes());
+        b[23..25].copy_from_slice(&self.crank_event_time.to_le_bytes());
         b
     }
 
     pub fn unpack(bytes: &[u8]) -> Option<Self> {
-        let b: [u8; 24] = bytes.get(..24)?.try_into().ok()?;
-        let unix = u64::from_le_bytes(b[4..12].try_into().unwrap());
-        let lat = i32::from_le_bytes(b[12..16].try_into().unwrap());
-        let lon = i32::from_le_bytes(b[16..20].try_into().unwrap());
+        let b: [u8; 25] = bytes.get(..25)?.try_into().ok()?;
+        if b[0] != PROTOCOL_VERSION {
+            return None;
+        }
+        let unix = u64::from_le_bytes(b[5..13].try_into().unwrap());
+        let lat = i32::from_le_bytes(b[13..17].try_into().unwrap());
+        let lon = i32::from_le_bytes(b[17..21].try_into().unwrap());
         Some(DataPoint {
-            uptime_ms: u32::from_le_bytes(b[0..4].try_into().unwrap()),
+            uptime_ms: u32::from_le_bytes(b[1..5].try_into().unwrap()),
             unix_millis: (unix != 0).then_some(unix),
             lat_microdeg: (lat != COORD_NONE).then_some(lat),
             lon_microdeg: (lon != COORD_NONE).then_some(lon),
-            crank_revs: u16::from_le_bytes(b[20..22].try_into().unwrap()),
-            crank_event_time: u16::from_le_bytes(b[22..24].try_into().unwrap()),
+            crank_revs: u16::from_le_bytes(b[21..23].try_into().unwrap()),
+            crank_event_time: u16::from_le_bytes(b[23..25].try_into().unwrap()),
         })
     }
 }
@@ -176,7 +187,8 @@ mod tests {
             crank_revs: 42,
             crank_event_time: 50_123,
         };
-        assert_eq!(dp.pack().len(), 24);
+        assert_eq!(dp.pack().len(), 25);
+        assert_eq!(dp.pack()[0], PROTOCOL_VERSION);
         assert_eq_point(dp, DataPoint::unpack(&dp.pack()).expect("unpack"));
     }
 
@@ -192,13 +204,28 @@ mod tests {
             crank_event_time: 9_001,
         };
         let packed = dp.pack();
-        assert_eq!(u64::from_le_bytes(packed[4..12].try_into().unwrap()), 0); // unix sentinel
-        assert_eq!(i32::from_le_bytes(packed[12..16].try_into().unwrap()), i32::MIN); // lat sentinel
+        assert_eq!(u64::from_le_bytes(packed[5..13].try_into().unwrap()), 0); // unix sentinel
+        assert_eq!(i32::from_le_bytes(packed[13..17].try_into().unwrap()), i32::MIN); // lat sentinel
         assert_eq_point(dp, DataPoint::unpack(&packed).expect("unpack"));
     }
 
     #[test]
     fn unpack_rejects_short_buffers() {
-        assert!(DataPoint::unpack(&[0u8; 23]).is_none());
+        assert!(DataPoint::unpack(&[0u8; 24]).is_none());
+    }
+
+    #[test]
+    fn unpack_rejects_mismatched_version() {
+        let dp = DataPoint {
+            uptime_ms: 1,
+            unix_millis: None,
+            lat_microdeg: None,
+            lon_microdeg: None,
+            crank_revs: 0,
+            crank_event_time: 0,
+        };
+        let mut packed = dp.pack();
+        packed[0] = PROTOCOL_VERSION.wrapping_add(1); // a different protocol revision
+        assert!(DataPoint::unpack(&packed).is_none());
     }
 }
