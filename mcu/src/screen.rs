@@ -214,7 +214,7 @@ impl Screen {
             )
             .await
             {
-                Either4::First(Either::First(gps)) => state.gps = Some(gps),
+                Either4::First(Either::First(gps)) => state.gps = gps,
                 Either4::First(Either::Second(sample)) => state.crank_revs = Some(sample.revs),
                 Either4::Second(Either::First(connected)) => state.sensor_connected = connected,
                 Either4::Second(Either::Second(bat)) => state.sensor_battery = Some(bat),

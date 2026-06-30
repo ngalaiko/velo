@@ -154,9 +154,11 @@ pub async fn run(stack: &Stack<'_, super::MyController, DefaultPacketPool>) {
                         };
                         STORE.lock().await.push(point);
                     }
+                    // GPS owns all fix-state logic; we just stamp whatever it last reported
+                    // (a position, or None on lost fix / silence).
                     Either4::Second(gps) => {
-                        current_lat = Some(gps.lat_microdeg);
-                        current_lon = Some(gps.lon_microdeg);
+                        current_lat = gps.map(|fix| fix.lat_microdeg);
+                        current_lon = gps.map(|fix| fix.lon_microdeg);
                     }
                     Either4::Third(connected) => {
                         SENSOR_STATE.lock().await.connected = connected;

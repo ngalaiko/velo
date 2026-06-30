@@ -3,6 +3,7 @@ use embassy_nrf::uarte::{self, Uarte};
 use embassy_nrf::{peripherals, Peri};
 use embassy_sync::blocking_mutex::raw::CriticalSectionRawMutex;
 use embassy_sync::watch::Watch;
+use embassy_time::{Duration, with_timeout};
 
 #[derive(Clone, Copy)]
 pub struct GpsState {
@@ -10,7 +11,10 @@ pub struct GpsState {
     pub lon_microdeg: i32,
 }
 
-pub static GPS: Watch<CriticalSectionRawMutex, GpsState, 2> = Watch::new();
+pub static GPS: Watch<CriticalSectionRawMutex, Option<GpsState>, 2> = Watch::new();
+
+// If no NMEA arrives for this long, consider the GPS silent and report loss of fix.
+const GPS_SILENCE_TIMEOUT: Duration = Duration::from_secs(5);
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 enum FixQuality {
@@ -46,11 +50,20 @@ impl Gps {
         let (_tx, mut rx) = uarte.split_with_idle(self.timer1, self.ppi_ch0, self.ppi_ch1);
 
         let gps_tx = GPS.sender();
+        let mut had_fix = false;
 
         let mut buf = [0u8; 1024];
         loop {
-            match rx.read_until_idle(&mut buf).await {
-                Ok(n) => {
+            match with_timeout(GPS_SILENCE_TIMEOUT, rx.read_until_idle(&mut buf)).await {
+                // No NMEA for the whole window — the GPS has gone silent. Report loss of fix
+                // so consumers stop stamping the last known position.
+                Err(_) => {
+                    if had_fix {
+                        gps_tx.send(None);
+                        had_fix = false;
+                    }
+                }
+                Ok(Ok(n)) => {
                     for line in buf[..n].split(|&b| b == b'\n') {
                         if line.is_empty() {
                             continue;
@@ -66,13 +79,22 @@ impl Gps {
                                     }
                                     _ => None,
                                 };
-                                if let (Some(_fix), Some(lat), Some(lon)) =
-                                    (fix_quality, rmc.lat, rmc.lon)
-                                {
-                                    gps_tx.send(GpsState {
-                                        lat_microdeg: (lat * 1_000_000.0) as i32,
-                                        lon_microdeg: (lon * 1_000_000.0) as i32,
-                                    });
+                                match (fix_quality, rmc.lat, rmc.lon) {
+                                    (Some(_fix), Some(lat), Some(lon)) => {
+                                        gps_tx.send(Some(GpsState {
+                                            lat_microdeg: (lat * 1_000_000.0) as i32,
+                                            lon_microdeg: (lon * 1_000_000.0) as i32,
+                                        }));
+                                        had_fix = true;
+                                    }
+                                    // No valid fix this sentence — emit one loss event on the
+                                    // transition so consumers stop stamping stale coordinates.
+                                    _ => {
+                                        if had_fix {
+                                            gps_tx.send(None);
+                                            had_fix = false;
+                                        }
+                                    }
                                 }
                                 if let (Some(date), Some(time)) = (rmc.fix_date, rmc.fix_time) {
                                     let epoch = to_unix_epoch(
@@ -90,7 +112,7 @@ impl Gps {
                         }
                     }
                 }
-                Err(e) => log::debug!("[GPS] read error: {:?}", e),
+                Ok(Err(e)) => log::debug!("[GPS] read error: {:?}", e),
             }
         }
     }
