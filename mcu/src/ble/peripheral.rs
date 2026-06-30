@@ -41,7 +41,9 @@ const ADV_DATA: &[u8] = &[
 /// 1 receiver: screen.
 pub static IOS_CONNECTED: Watch<CriticalSectionRawMutex, bool, 1> = Watch::new();
 
-// Ring buffer of DataPoints to replay when iOS reconnects.
+// Ring buffer of DataPoints — the single source of truth for everything captured. The
+// delivery loop drains it oldest-first and removes each point only once iOS has acked it,
+// so buffered (offline/disconnected) points and live points flow through one path, in order.
 const CAPACITY: usize = 4096;
 
 struct Store {
@@ -53,22 +55,36 @@ impl Store {
         Self { buf: Deque::new() }
     }
 
+    /// Append a point and wake the delivery loop. Drops the oldest point when full so the
+    /// buffer always retains the most recent CAPACITY points (a disconnection safety net).
     fn push(&mut self, point: DataPoint) {
         if self.buf.is_full() {
             self.buf.pop_front();
         }
         let _ = self.buf.push_back(point);
+        DATA_READY.signal(());
     }
 
-    fn pop_newest(&mut self) -> Option<DataPoint> {
-        self.buf.pop_back()
+    /// Remove and return the oldest buffered point. Delivery is FIFO so iOS receives a
+    /// monotonic `uptime_ms` timeline.
+    fn pop_oldest(&mut self) -> Option<DataPoint> {
+        self.buf.pop_front()
+    }
+
+    /// Put a point back at the front after a failed notify, so it's redelivered on the next
+    /// reconnect. Best-effort: if the buffer filled during the in-flight notify the point is
+    /// dropped (one point lost at disconnect — acceptable for a fitness logger).
+    fn requeue_front(&mut self, point: DataPoint) {
+        let _ = self.buf.push_front(point);
     }
 }
 
 static STORE: Mutex<CriticalSectionRawMutex, Store> = Mutex::new(Store::new());
 
-// Signals the latest DataPoint to the live-streaming loop when iOS is connected.
-static LIVE: Signal<CriticalSectionRawMutex, DataPoint> = Signal::new();
+// Edge-trigger that wakes the delivery loop when the store gains data. A unit Signal is
+// enough: the store is the source of truth, so coalesced wakeups are fine — the loop drains
+// whatever is available on each wake.
+static DATA_READY: Signal<CriticalSectionRawMutex, ()> = Signal::new();
 
 // Current sensor state — updated by the DataPoint loop, read by the iOS loop for DeviceStatus.
 struct SensorState {
@@ -137,7 +153,6 @@ pub async fn run(stack: &Stack<'_, super::MyController, DefaultPacketPool>) {
                             lon_microdeg: current_lon,
                         };
                         STORE.lock().await.push(point);
-                        LIVE.signal(point);
                     }
                     Either4::Second(gps) => {
                         current_lat = Some(gps.lat_microdeg);
@@ -211,7 +226,10 @@ pub async fn run(stack: &Stack<'_, super::MyController, DefaultPacketPool>) {
                 let stream_handle = server.bike.stream.handle;
                 let time_sync_handle = server.bike.time_sync.handle;
 
-                join(
+                // select, not join: either side finishing (a disconnect) drops the other.
+                // With a blocking delivery loop, join would hang here if the loop were parked
+                // on DATA_READY when iOS dropped — it would never observe the disconnect.
+                let _ = select(
                     // Drain GATT events + push status updates every second.
                     // Uses Characteristic::notify(&gatt_conn, ...) which targets this specific
                     // connection directly, bypassing the CCCD peer-identity lookup in
@@ -274,45 +292,26 @@ pub async fn run(stack: &Stack<'_, super::MyController, DefaultPacketPool>) {
                             }
                         }
                     },
-                    // Replay buffered points, then stream live.
+                    // Drain the store oldest-first, popping each point only after iOS acks it
+                    // (notify Ok). Buffered (offline/disconnected) points are simply the oldest
+                    // entries, so they "replay" first; live points follow as they arrive — one
+                    // path, in order. On notify error we re-buffer the in-flight point and bail
+                    // so the connection loop re-advertises.
                     async {
-                        log::info!("[BLE peripheral] Replaying buffered points...");
+                        log::info!("[BLE peripheral] Streaming...");
                         loop {
-                            let point = STORE.lock().await.pop_newest();
-                            match point {
-                                None => break,
-                                Some(p) => {
-                                    let packed = p.pack();
-                                    if server
-                                        .notify(stack, stream_handle, &packed[..])
-                                        .await
-                                        .is_err()
-                                    {
-                                        log::warn!(
-                                            "[BLE peripheral] notify error during replay"
-                                        );
-                                        return;
-                                    }
-                                }
-                            }
-                        }
-
-                        // Discard any DataPoints that arrived during replay — they're in the
-                        // buffer and would be replayed on next connect anyway.
-                        LIVE.reset();
-
-                        log::info!("[BLE peripheral] Streaming live...");
-                        loop {
-                            let point = LIVE.wait().await;
-                            let packed = point.pack();
+                            let point = STORE.lock().await.pop_oldest();
+                            let Some(p) = point else {
+                                DATA_READY.wait().await;
+                                continue;
+                            };
                             if server
-                                .notify(stack, stream_handle, &packed[..])
+                                .notify(stack, stream_handle, &p.pack()[..])
                                 .await
                                 .is_err()
                             {
-                                log::warn!(
-                                    "[BLE peripheral] notify error during live stream"
-                                );
+                                log::warn!("[BLE peripheral] notify error, re-buffering point");
+                                STORE.lock().await.requeue_front(p);
                                 return;
                             }
                         }
